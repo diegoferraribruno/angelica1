@@ -91,7 +91,6 @@ func preload_saved():
 						load_user_prefs()
 				if buser[6][4] == false:
 					autosave = false
-#					if buser[6][4]==:
 
 func load_user_prefs():
 	var file = File.new()
@@ -216,7 +215,8 @@ func change_state(state_new):
 			get_node("Interface/Panel").visible = true
 			get_node("Interface/Print2").visible = false
 			state = "show"
-			
+	if $Control.addonmode == true:
+			OS.set_window_mouse_passthrough([])
 
 func face_change(image):
 	get_node("Face").set_texture(image)
