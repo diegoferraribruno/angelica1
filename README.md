@@ -4,6 +4,8 @@ Angelica - Desktop Helper
 She is Evolving really fast! in ony 21 Days of life she have already acomplished so mutch!
 
 Just type demo  and see part of what she can do!
+Here is the video of the demo:
+https://youtu.be/AHC_dVyb5KY
 
 You can drag her around in your desktop if you download her.
 This web version is just for Trying before download.
@@ -12,8 +14,8 @@ No warranty that things are going to work.
 
 If you test it on Win or Mac please let me know! :)
 
-You can download this project at:
-https://github.com/diegoferraribruno/angelica1
+You can play or get her last builds at:
+https://diegoferraribruno.itch.io/angelica
 
 Angelica is a chat bot that know some words
 She might become a great assistant in the future!
