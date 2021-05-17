@@ -3,6 +3,9 @@ Angelica - Desktop Helper
 
 She is Evolving really fast! in ony 21 Days of life she have already acomplished so mutch!
 
+Here is a demo on adding her as addon to a godot game project:
+https://youtu.be/D06d3YNDikQ
+
 Just type demo  and see part of what she can do!
 Here is the video of the demo:
 https://youtu.be/AHC_dVyb5KY
