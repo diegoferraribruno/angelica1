@@ -40,9 +40,11 @@ func panel_position():
 				if get_node("..").position.x < 480:
 					get_node("../Interface").position.x = 0
 				if get_node("..").position.y < -200:
+					get_node("../Interface/Editor").position.y = 320
 					get_node("../Interface/Panel").position.y = 320
 					get_node("../Interface/Warning").position.y = 240
 				if get_node("..").position.y > 0:
+					get_node("../Interface/Editor").position.y = 0
 					get_node("../Interface/Panel").position.y = 0
 					get_node("../Interface/Warning").position.y = 0
 #func _on_MinimizeButton_pressed():

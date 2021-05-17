@@ -1,7 +1,7 @@
 extends Node2D
 
-const ai_version = "121"
-const ai_date = "2021-05-13"
+const ai_version = "122"
+const ai_date = "2021-05-17"
 const about = "My version is"+ ai_version+" from " +ai_date+" please check for updates at [url=http://diegoferraribruno.itch.io/angelica]my web page[/url] \nIf you wanna chat a bit say: [b]hello[/b]"
 const STATES = ["mini","hide","show","editor"]
 var state = "show"
@@ -91,6 +91,7 @@ func preload_saved():
 						load_user_prefs()
 				if buser[6][4] == false:
 					autosave = false
+#					if buser[6][4]==:
 
 func load_user_prefs():
 	var file = File.new()
@@ -119,7 +120,6 @@ func load_user_prefs():
 			initialize = user[8]
 #			lastposition = user[6][11]
 			text_to_say("OH! it is you [b][color="+user[3]+"]"+user[1]+"[/color][/b]?")
-
 		else:
 			printerr("No saved data! type 'save' to make a new file. \n Remember to aways save after making changes.")
 
@@ -138,11 +138,7 @@ func _process(delta):
 #		if OS.is_window_focused() and autohide == true and state == "mini":
 #			change_state(state_old)
 
-func _teste():
-	text_to_say("maravilha")
-
 func _ready():
-
 #	save_prefs() # it will reset user prefs in case of inconsistences
 	preload_saved()
 	face_change(new_face)
@@ -204,7 +200,10 @@ func change_state(state_new):
 			get_node("Interface/Panel").visible = false
 			get_node("Interface/Print2").visible = true
 			state = "hide"
-			$Interface/LineEdit.grab_focus()
+			if $Interface/Editor.visible == true:
+				$Interface/Editor/TextEdit.grab_focus()
+			else:
+				$Interface/LineEdit.grab_focus()
 		"show":
 			get_node("Interface").visible = true
 			get_node("Interface/LineEdit/Linkmini").text = "<"
@@ -214,9 +213,13 @@ func change_state(state_new):
 			get_node("Interface/Print2").visible = true
 			get_node("Interface/Panel").visible = true
 			get_node("Interface/Print2").visible = false
+			if $Interface/Editor.visible == true:
+				$Interface/Editor/TextEdit.grab_focus()
+			else:
+				$Interface/LineEdit.grab_focus()
 			state = "show"
-#	if $Control.addonmode == true:
-#			OS.set_window_mouse_passthrough([])
+	if $Control.addonmode == true:
+			OS.set_window_mouse_passthrough([])
 
 func face_change(image):
 	get_node("Face").set_texture(image)
@@ -693,10 +696,6 @@ func _on_LineEdit_text_entered(new_text)-> void :
 			append_text(str(i+": "+help[i][0]+"\n"))
 	if new_text == " editor ":
 		get_node("Interface/Editor")._on_EditorButton_button_up()
-		pass
-#		"PopupPanel"PopupPanel()
-#		get_node("Interface/Editor/TextEdit").text = ""
-#		get_node("Interface/Editor/TextEdit").visible = !get_node("Interface/Editor/TextEdit").visible
 	if new_text == " bye ":
 		new_face = load("res://addons/angelica/images/1f64b.png")
 		face_change(new_face)
@@ -865,9 +864,6 @@ func add_hashtags():
 	for i in hashtags:
 		append_text(str(i+" "))
 
-#func _on_OpenShellWeb_pressed():
-#		$AudioStreamPlayer.play()
-#	OS.shell_open("https://example.com")
 func _on_Print_meta_clicked(meta):
 #	$AudioStreamPlayer.play()
 	$TimerMini.start()
@@ -927,19 +923,16 @@ func _on_AngelicaTimer2_timeout():
 	else:
 		$AngelicaTimer2.stop()
 		$Face/TimerClock.text = ""
-		
-		
-		
 
 func _on_Button_button_up():
 	if autopause == true:
 		get_tree().paused = false
 	$Interface/Warning.visible = false
 	$TimeOut.stop()
-	
+
 func _on_TimerMini_timeout():
 	change_state("mini")
-	
+
 func _on_Control_gui_input(InputEventMouseButton):
 	if addonmode == false:
 			match state:
@@ -958,7 +951,6 @@ func _on_Control_mouse_entered():
 			_:
 				change_state("mini")
 
-
 func _on_LineEdit_focus_entered():
 	$Interface/LineEdit.text = history[0]
 	pass # Replace with function body.
@@ -976,7 +968,6 @@ func _on_LineEdit_gui_input(event):
 	if Input.is_action_just_released("ui_down") and command_n >= 1:
 			command_n-=1
 			$Interface/LineEdit.text = history[command_n]
-
 
 func _on_Blink_timeout():
 	change_state(state_old)
@@ -1016,11 +1007,11 @@ func _on_TimeOut_timeout():
 func _on_close_button_up():
 	get_node("Interface/Editor").visible = false
 	if addonmode == false:
-		match state:
-			"hide":
-				OS.set_window_mouse_passthrough($Interface/Polygon2D2.polygon)
-			"show":
-				OS.set_window_mouse_passthrough($Interface/PolygonFull.polygon)
+			match state:
+				"hide":
+					OS.set_window_mouse_passthrough($Interface/Polygon2D2.polygon)
+				"show":
+					OS.set_window_mouse_passthrough($Interface/PolygonFull.polygon)
 
 func _on_MouseOver():
 	match state:
@@ -1053,8 +1044,6 @@ func _on_LinkHide_button_up():
 
 # crash test area EDITOR
 
-var posA = 7
-var posB = 0
 var editing = ["note","firstone"]
 func editor(what,witch):
 	if what == "note":
@@ -1078,14 +1067,13 @@ func _on_save_button_up():
 #				save_note_text.replace("save note ","")
 				notes[1][x] = save_note_text
 				user[7] = notes
-				text = "Saved note [b]"+i+"[/b] : " + save_note_text
+				text = str(datetime_to_string(OS.get_time()))+ "Saved note [b]"+i+"[/b] : " + save_note_text
 				text_to_say(text)
-				text =""
 				auto_save()
 			x += 1
-#	get_node(Interface/Editor/TextEdit").visible = true
-	get_node("Interface/Editor/TextEdit").set_text("")
-	get_node("Interface/Editor/Label").text = "Saved: "+str(editing)
+	get_node("Interface/Editor/TextEdit").visible = false
+#	get_node("Interface/Editor/TextEdit").set_text("")
+	get_node("Interface/Editor/Label").text = "Saved: "+str(editing) +" by"+ str(datetime_to_string(OS.get_time())) 
 	
 	
 var dialogue = [

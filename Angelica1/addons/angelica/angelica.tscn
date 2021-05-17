@@ -223,14 +223,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Editor" type="Panel" parent="Interface"]
+[node name="Editor" type="Node2D" parent="Interface"]
 visible = false
-margin_left = 22.0
-margin_top = 2.0
-margin_right = 636.0
-margin_bottom = 281.0
-custom_styles/panel = SubResource( 8 )
+position = Vector2( 22, 2 )
 script = ExtResource( 14 )
+
+[node name="bg" type="Panel" parent="Interface/Editor"]
+margin_right = 614.0
+margin_bottom = 279.0
+custom_styles/panel = SubResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -299,9 +300,9 @@ __meta__ = {
 }
 
 [node name="copy" type="LinkButton" parent="Interface/Editor"]
-margin_left = 422.265
+margin_left = 421.765
 margin_top = 222.001
-margin_right = 475.265
+margin_right = 475.765
 margin_bottom = 248.001
 grow_horizontal = 2
 grow_vertical = 2
@@ -343,24 +344,6 @@ custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.0156863, 0.694118, 0.113725, 1 )
 align = 1
 
-[node name="EditorButton" type="LinkButton" parent="Interface"]
-margin_left = 460.0
-margin_top = 265.119
-margin_right = 526.0
-margin_bottom = 291.119
-grow_horizontal = 2
-grow_vertical = 2
-focus_next = NodePath("../../Print")
-focus_previous = NodePath("..")
-focus_mode = 2
-custom_fonts/font = ExtResource( 3 )
-custom_colors/font_color = Color( 0.160784, 0.811765, 0.231373, 1 )
-text = "[editor]"
-underline = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Print2" type="RichTextLabel" parent="Interface"]
 visible = false
 margin_left = 93.0
@@ -386,6 +369,24 @@ selection_enabled = true
 custom_effects = [ null, null, null, null, null ]
 __meta__ = {
 "_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="EditorButton" type="LinkButton" parent="Interface"]
+margin_left = 460.0
+margin_top = 265.119
+margin_right = 526.0
+margin_bottom = 291.119
+grow_horizontal = 2
+grow_vertical = 2
+focus_next = NodePath("../../Print")
+focus_previous = NodePath("..")
+focus_mode = 2
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0.160784, 0.811765, 0.231373, 1 )
+text = "[editor]"
+underline = 1
+__meta__ = {
 "_edit_use_anchors_": false
 }
 
@@ -605,8 +606,8 @@ autostart = true
 wait_time = 3000.0
 autostart = true
 
-[connection signal="gui_input" from="Control" to="Control" method="_on_Control_gui_input"]
 [connection signal="gui_input" from="Control" to="." method="_on_Control_gui_input"]
+[connection signal="gui_input" from="Control" to="Control" method="_on_Control_gui_input"]
 [connection signal="mouse_entered" from="Control" to="." method="_on_Control_mouse_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="AngelicaTimer" to="." method="_on_AngelicaTimer_timeout"]
@@ -617,15 +618,15 @@ autostart = true
 [connection signal="button_up" from="Interface/Editor/save" to="." method="_on_save_button_up"]
 [connection signal="button_up" from="Interface/Editor/copy" to="." method="_on_copy_button_up"]
 [connection signal="button_up" from="Interface/Editor/close" to="." method="_on_close_button_up"]
-[connection signal="button_up" from="Interface/EditorButton" to="Interface/Editor" method="_on_EditorButton_button_up"]
 [connection signal="meta_clicked" from="Interface/Print2" to="." method="_on_Print_meta_clicked"]
+[connection signal="button_up" from="Interface/EditorButton" to="Interface/Editor" method="_on_EditorButton_button_up"]
 [connection signal="gui_input" from="Interface/LineEdit" to="." method="_on_LineEdit_gui_input"]
-[connection signal="text_entered" from="Interface/LineEdit" to="Interface/Panel/Print" method="_on_LineEdit_text_entered"]
 [connection signal="text_entered" from="Interface/LineEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="text_entered" from="Interface/LineEdit" to="Interface/Panel/Print" method="_on_LineEdit_text_entered"]
 [connection signal="button_up" from="Interface/LineEdit/LinkBye" to="Control" method="_on_LinkButton_button_up"]
 [connection signal="button_up" from="Interface/LineEdit/Linkmini" to="." method="_on_Linkmini_button_up"]
-[connection signal="button_up" from="Interface/LineEdit/SendButton" to="Interface/Panel/Print" method="_on_SendButton_button_up"]
 [connection signal="button_up" from="Interface/LineEdit/SendButton" to="." method="_on_SendButton_button_up"]
+[connection signal="button_up" from="Interface/LineEdit/SendButton" to="Interface/Panel/Print" method="_on_SendButton_button_up"]
 [connection signal="button_up" from="Interface/LineEdit/LinkHide" to="." method="_on_LinkHide_button_up"]
 [connection signal="button_up" from="Interface/Warning/Button" to="." method="_on_Button_button_up"]
 [connection signal="timeout" from="TimeOut" to="." method="_on_TimeOut_timeout"]
