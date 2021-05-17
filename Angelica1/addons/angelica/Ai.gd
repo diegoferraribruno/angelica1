@@ -215,8 +215,8 @@ func change_state(state_new):
 			get_node("Interface/Panel").visible = true
 			get_node("Interface/Print2").visible = false
 			state = "show"
-	if $Control.addonmode == true:
-			OS.set_window_mouse_passthrough([])
+#	if $Control.addonmode == true:
+#			OS.set_window_mouse_passthrough([])
 
 func face_change(image):
 	get_node("Face").set_texture(image)
@@ -1015,11 +1015,12 @@ func _on_TimeOut_timeout():
 
 func _on_close_button_up():
 	get_node("Interface/Editor").visible = false
-	match state:
-		"hide":
-			OS.set_window_mouse_passthrough($Interface/Polygon2D2.polygon)
-		"show":
-			OS.set_window_mouse_passthrough($Interface/PolygonFull.polygon)
+	if addonmode == false:
+		match state:
+			"hide":
+				OS.set_window_mouse_passthrough($Interface/Polygon2D2.polygon)
+			"show":
+				OS.set_window_mouse_passthrough($Interface/PolygonFull.polygon)
 
 func _on_MouseOver():
 	match state:
