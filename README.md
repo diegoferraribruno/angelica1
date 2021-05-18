@@ -6,6 +6,14 @@ She is Evolving really fast! in ony 21 Days of life she have already acomplished
 Here is a demo on adding her as addon to a godot game project:
 https://youtu.be/D06d3YNDikQ
 
+###important for addon mode###
+Add an input key map (in project config) for right mouse click and call it "Click". 
+Than you can drag her around your game screen!
+If you want to use her as an addon, you should only import to your project the addon folder!
+You just need to Delete the PlayerExample line error that will appear and all should be fine.
+Try: print PlayerExample position to see what happens.. ;)
+###############
+
 Just type demo  and see part of what she can do!
 Here is the video of the demo:
 https://youtu.be/AHC_dVyb5KY
