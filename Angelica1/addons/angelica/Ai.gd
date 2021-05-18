@@ -1071,8 +1071,6 @@ func _on_save_button_up():
 				text_to_say(text)
 				auto_save()
 			x += 1
-	get_node("Interface/Editor/TextEdit").visible = false
-#	get_node("Interface/Editor/TextEdit").set_text("")
 	get_node("Interface/Editor/Label").text = "Saved: "+str(editing) +" by"+ str(datetime_to_string(OS.get_time())) 
 	
 	
