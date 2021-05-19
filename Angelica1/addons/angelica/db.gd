@@ -100,7 +100,7 @@ var help = {
 	"add #":["will add a word to your hashtag list: Ex: add # GodotEngine"],
 	"del #":["will remove a word from your hashtag list: EX: remove # GodotEngine"],
 	"list #":["I will list of all hashtags but won't copy them"],
-	"------":["---------------------- [b]Web and link Commands[/b]-----------------"],
+	"------":["------------------- [b]Web and link Commands[/b]-----------------"],
 	"+":["Opens a saved link by the shortcut name: link twitter","\n to list your links type links"],
 	"add link":["Add link to your list Ex.: add link youtube htpp://youtube.com"],
 	"del link:":["Ex.:[b]remove link youtube[/b] will remove from your list of links"],
@@ -108,13 +108,14 @@ var help = {
 	"dg":["Search the web with duckduckgo.com a more private search engine"],
 	"gg":["google anything you want! I will open a browser with your search."],	
 	"gd":["will start google with the word GDScrip + text.. just a shortcut for developers"],
-	"-------":["--------------------- [b]Switch True/False preferences[/b]----------------------------"],
+	"-------":["------------------- [b]Switch True/False preferences[/b]----------------------------"],
 	"autoload":["will set it [b]true[/b] or [b]false[/b] for your saved preferences to load at start (you problably should not touch this)"],
 	"autosave":["auto save your preferences when you say [b]bye[/b]. if False, try 'autosave' again to switch it on."],
 	"autohide":["Set it to false to prevent changing sizes automaticaly when mouse is over."],
 	"mini":["will hide every panel and angelica becomes an icon!"],
 	"hide":["will hide/show the text panel"],
 	"show":["will show/hide the full text panel"],
+	"quietstart":["if you like, i can start very small"],
 	"----------":["--------------- [b]I am the one[/b] -------------------------------"],
 	"print":["try: print NodeName Var Ex. [b] print . a [/b] or [b]print Angelica user[/b]"],
 	"editor":["I will open/close the internal text editor"],
@@ -128,14 +129,15 @@ var help = {
 	"edit note":["'edit note notename' opens editor to edit your note. save it by clicking the save button"],
 	"copy note":["'copy note NoteName' will copy the content of the note to the clipboard so you can paste it anywhere"],
 	"tw note":["'tw note NoteName will tweet your note'"],
-	"-------------":["------------Screen Shot -----------------------------------"],
+	"-------------":["------------[b]Screen Shot[/b] -----------------------------------"],
 	"ss":["will take a screenshot of your game. If in addon mode."],
 	"selfie":["will take a screenshot of angelica with game in background"],
 	"folder":["Will open your user system folder were screenshots and save files are locate!"],
 	"tw ss":["With [b]tw ss # Text[/b] command, you will get browser tweeter opened with text, hashtags and also will open the folder so you can just drag the PNG to your tweeet. What else do you need my friend gamedev?"],
 	"tw @":[ "'tw @ LinkName Text #' to creat a tweet with a link "],
-
-	
+	"--------------":["------------[b]Sounds and volume[/b] -----------------------------------"],
+		"sound":["switch on/off angelica alerts"],
+		"volume":["Will decrease Master audio channel in 10db until -30db than back to 0db"]
 	}
 var sentences = {
 	"no_file":"Hi. Have we ever met? i am sorry, i am confused, what is your name again?",

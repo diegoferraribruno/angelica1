@@ -6,6 +6,7 @@ const about = "My version is"+ ai_version+" from " +ai_date+" please check for u
 const STATES = ["mini","hide","show","editor"]
 var state = "show"
 var state_old = "show"
+var quiet = false
 const FILE_NAME = "user://angelica-data.json"
 var ai_name = "Angelica"
 var ai_color = "#ffbbdd"
@@ -42,9 +43,11 @@ var addonmode = true
 var autopause = true
 onready var printparent = "get_parent()"
 var initialize = [[true],["about","notes","list links",]]
-var sound = true
+var sound = [[true,0],["Interface/Warning/Alarm"]] #space reserved for adding game audiolayers
+#var sound = true
 var last_window_pos
 var userbkp = user
+var pong = preload("res://addons/angelica/Pong/pong.tscn")
 #var lastposition = Vector2(user[6][11].x,user[6][11].y)
 func inittialize():
 	for i in user[8][1]:
@@ -109,12 +112,17 @@ func load_user_prefs():
 			autoload = user[6][4]
 			autosave = user[6][5]
 			$Control.addonmode = user[6][6]
+			quietstart = user[6][7]
 			rsiblink = user[6][8]
 			autopause = user[6][9]
 			$Blink.wait_time = rsiblink[1][1]
 			$RSI.wait_time = rsiblink[1][0]
 			addonmode = user[6][6]
 			sound = user[6][10]
+			if sound is bool:
+				text_to_say("sound is "+str(sound))
+				sound = [[true,0],["Interface/Warning/Alarm"]]
+				text_to_say("sound is "+str(sound))
 			last_window_pos = user[6][12]
 			notes = user[7]
 			initialize = user[8]
@@ -253,7 +261,6 @@ func screen_shot(selfie):
 					self.visible = true
 				text_to_say(text)
 
-
 func _on_LineEdit_text_entered(new_text)-> void :
 	history.push_front(new_text)
 	command_n = 0
@@ -266,6 +273,23 @@ func _on_LineEdit_text_entered(new_text)-> void :
 				"selfie":
 					screen_shot(true)
 					yield(get_tree().create_timer(0.2), "timeout")
+				"pong":
+					var instance = pong.instance()
+					if get_node("Interface/Panel/Print").visible == true:
+						get_node("Interface/Panel/Print").visible = false
+#						add_child(pong,true)
+						get_node("Interface/Panel/Print").text = ""
+						get_node("Interface/Panel/").add_child(instance)
+						change_state("mini")
+						$Interface.visible = true
+						if $Control.addonmode == false:
+							OS.set_window_mouse_passthrough($Interface/PolygonFull.polygon)
+#							OS.set_window_mouse_passthrough([])
+					else:
+						get_node("Interface/Panel/Print").visible = true
+						get_node("Interface/Panel/Pong").queue_free()
+						text_to_say("Good game!")
+					
 	if command.size() > 1:
 		var ai_name_b = ai_name.to_lower()
 		match command[0].to_lower():
@@ -428,12 +452,9 @@ func _on_LineEdit_text_entered(new_text)-> void :
 			math(command[0])
 			match command[0]:
 				"sound":
-					sound = !sound
-					user[6][10] = sound
-					if sound == false:
-						text_to_say("Sound alerts are Off")
-					else:
-						text_to_say("Sound alerts are On")
+					sound_change()
+				"volume":
+					volume_change()
 				"reset":
 					get_tree().reload_current_scene()
 				"init":
@@ -442,12 +463,14 @@ func _on_LineEdit_text_entered(new_text)-> void :
 					text_to_say("opening folder: "+str(OS.get_user_data_dir()))
 					OS.shell_open(OS.get_user_data_dir())
 				"autopause":
-					autopause = !autopause
+					autopause = !autopause 
 					text_to_say("auto pause is set to "+ str(autopause))
 				"pause":
 					get_tree().paused = !get_tree().paused
-					text_to_say("Game pause is "+ str(get_tree().paused))
 					
+					text_to_say("Game pause is "+ str(get_tree().paused))
+#					if get_node("Interface/Panel/Panel").has_node():
+						
 	if command.size() > 1:
 		match command[0].to_lower():
 			"edit":
@@ -546,6 +569,16 @@ func _on_LineEdit_text_entered(new_text)-> void :
 								if i == key:
 									OS.clipboard = notes[1][x]
 									text_to_say("Text copied to clipboard: " + notes[1][x])
+									auto_save()
+									break
+								x += 1
+					"@":
+							var key = str(command[2])
+							var x = 0
+							for i in links[0]:
+								if i == key:
+									OS.clipboard = links[1][x]
+									text_to_say("Your Link to: [b]" + links[1][x] +"[/b] is ready to Ctrl+V.")
 									auto_save()
 									break
 								x += 1
@@ -657,8 +690,9 @@ func _on_LineEdit_text_entered(new_text)-> void :
 				text_to_say("autosave set to "+str(autosave))
 			"quietstart":
 				quietstart = !quietstart
-				user[6][5] = autosave
-				text_to_say("autosave set to "+str(autosave))
+				user[6][7] = quietstart
+				text_to_say("quietstart set to "+str(quietstart))
+				save_prefs()
 			"addon":
 				$Control.addonmode = !$Control.addonmode
 				user[6][6] = $Control.addonmode
@@ -908,7 +942,7 @@ func _on_AngelicaTimer_timeout():
 	new_face = load("res://addons/angelica/images/1f64b.png")
 	get_node("Face").set_texture(new_face)
 	$Interface/Warning.visible = !$Interface/Warning.visible
-	if sound == true:
+	if sound[0][0] == true:
 		$Interface/Warning/Alarm.play()
 	change_state(state_old)
 	
@@ -970,18 +1004,20 @@ func _on_LineEdit_gui_input(event):
 			$Interface/LineEdit.text = history[command_n]
 
 func _on_Blink_timeout():
-	change_state(state_old)
-	if autopause == true:
-		get_tree().paused = true
-#	text_to_say("Time to rest your eyes")
-	new_face = load("res://addons/angelica/images/1f64b.png")
-	get_node("Face").set_texture(new_face)
-	$Interface/Warning.visible = !$Interface/Warning.visible
-	$Interface/Warning/Label.text = "Take 20 seconds to rest your eyes."
-	$Interface/Warning/Alarm.play()
-	$TimeOut.wait_time = 20
-	$TimeOut.start()
-	change_state(state_old)
+	if !quiet:
+		change_state(state_old)
+		if autopause == true:
+			get_tree().paused = true
+	#	text_to_say("Time to rest your eyes")
+		new_face = load("res://addons/angelica/images/1f64b.png")
+		get_node("Face").set_texture(new_face)
+		$Interface/Warning.visible = !$Interface/Warning.visible
+		$Interface/Warning/Label.text = "Take 20 seconds to rest your eyes."
+		if sound[0][0] == true:
+			$Interface/Warning/Alarm.play()
+		$TimeOut.wait_time = 20
+		$TimeOut.start()
+		change_state(state_old)
 
 func _on_RSI_timeout():
 	change_state(state_old)
@@ -1001,7 +1037,8 @@ func _on_TimeOut_timeout():
 	if autopause == true:
 		get_tree().paused = false
 		$Interface/Warning.visible = false
-		$Interface/Warning/Alarm.play()
+		if sound[0][0] == true:
+			$Interface/Warning/Alarm.play()
 
 
 func _on_close_button_up():
@@ -1116,8 +1153,24 @@ var dialogue = [
 	"del note Angelica121",
 	"help"
 	]
+enum BUS { MASTER }
 
-
+func volume_change():
+		var bus_idx = AudioServer.get_bus_index("Master")
+		var volume = AudioServer.get_bus_volume_db(bus_idx)
+		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), volume -10)
+		var alarm = $Interface/Warning/Alarm
+		if volume <= -30:
+			AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), 0)
+		alarm.play()
+func sound_change():
+	sound[0][0] = !sound[0][0]
+	user[6][10] = sound
+	if sound[0][0] == false:
+		text_to_say("Sound alerts are set to Off")
+	else:
+		text_to_say("Sound alerts are set to On")
+	
 func _on_copy_button_up():
 		OS.clipboard = get_node("Interface/Editor/TextEdit").text
 		append_text("\n")
