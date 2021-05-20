@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://addons/angelica/Ai.gd" type="Script" id=1]
 [ext_resource path="res://addons/angelica/images/1f64b.png" type="Texture" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://addons/angelica/fonts/OpenSans-SemiboldItalic.ttf" type="DynamicFontData" id=12]
 [ext_resource path="res://addons/angelica/scripts/TextEdit.gd" type="Script" id=13]
 [ext_resource path="res://addons/angelica/Editor.gd" type="Script" id=14]
+[ext_resource path="res://addons/angelica/RichTextLabel.gd" type="Script" id=15]
 
 [sub_resource type="Theme" id=1]
 
@@ -216,6 +217,7 @@ bbcode_enabled = true
 tab_size = 7
 scroll_following = true
 selection_enabled = true
+override_selected_font_color = true
 custom_effects = [ null, null, null, null, null ]
 script = ExtResource( 8 )
 __meta__ = {
@@ -224,7 +226,6 @@ __meta__ = {
 }
 
 [node name="Editor" type="Node2D" parent="Interface"]
-visible = false
 position = Vector2( 22, 2 )
 script = ExtResource( 14 )
 
@@ -237,6 +238,36 @@ __meta__ = {
 }
 
 [node name="TextEdit" type="TextEdit" parent="Interface/Editor"]
+margin_left = 20.0
+margin_top = 27.0
+margin_right = 604.0
+margin_bottom = 229.0
+theme = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color = Color( 0.0196078, 0.682353, 0.101961, 1 )
+text = "This is the note editor: Here are some useful commands:
+notes
+list notes
+add note 1 Testing : (will add a note named 1 with the text \"Testing\")
+edit note 1 (wil open the note \"1\" here) than you can edit and save it.
+del note 1 (will delete your note named 1)
+HAVE FUN!!!"
+syntax_highlighting = true
+fold_gutter = true
+highlight_all_occurrences = true
+override_selected_font_color = true
+smooth_scrolling = true
+wrap_enabled = true
+caret_blink = true
+caret_blink_speed = 1.18
+script = ExtResource( 13 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextEdit2" type="TextEdit" parent="Interface/Editor"]
+visible = false
 margin_left = 34.0
 margin_top = 35.0
 margin_right = 585.0
@@ -252,40 +283,20 @@ add note 1 Testing : (will add a note named 1 with the text \"Testing\")
 edit note 1 (wil open the note \"1\" here) than you can edit and save it.
 del note 1 (will delete your note named 1)
 HAVE FUN!!!"
-syntax_highlighting = true
-breakpoint_gutter = true
+fold_gutter = true
 override_selected_font_color = true
 smooth_scrolling = true
 caret_blink = true
 caret_blink_speed = 1.18
-script = ExtResource( 13 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SendButton2" type="LinkButton" parent="Interface/Editor"]
-visible = false
-margin_left = 483.396
-margin_top = 197.499
-margin_right = 586.396
-margin_bottom = 223.499
-grow_horizontal = 2
-grow_vertical = 2
-focus_next = NodePath("../../Print")
-focus_previous = NodePath("..")
-focus_mode = 2
-custom_fonts/font = ExtResource( 3 )
-text = "update chat"
-underline = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="save" type="LinkButton" parent="Interface/Editor"]
-margin_left = 480.699
-margin_top = 223.499
-margin_right = 533.699
-margin_bottom = 249.499
+margin_left = 491.378
+margin_top = 236.847
+margin_right = 544.378
+margin_bottom = 262.847
 grow_horizontal = 2
 grow_vertical = 2
 focus_next = NodePath("../../Print")
@@ -300,10 +311,10 @@ __meta__ = {
 }
 
 [node name="copy" type="LinkButton" parent="Interface/Editor"]
-margin_left = 421.765
-margin_top = 222.001
-margin_right = 475.765
-margin_bottom = 248.001
+margin_left = 436.448
+margin_top = 238.019
+margin_right = 490.448
+margin_bottom = 264.019
 grow_horizontal = 2
 grow_vertical = 2
 focus_next = NodePath("../../Print")
@@ -319,9 +330,9 @@ __meta__ = {
 
 [node name="close" type="LinkButton" parent="Interface/Editor"]
 margin_left = 549.518
-margin_top = 223.499
+margin_top = 236.847
 margin_right = 586.518
-margin_bottom = 249.499
+margin_bottom = 262.847
 grow_horizontal = 2
 grow_vertical = 2
 focus_next = NodePath("../../Print")
@@ -336,20 +347,23 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="Interface/Editor"]
-margin_left = 176.763
-margin_top = 9.1189
-margin_right = 426.763
-margin_bottom = 35.1189
+margin_left = 164.99
+margin_top = -0.130962
+margin_right = 414.99
+margin_bottom = 25.869
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.0156863, 0.694118, 0.113725, 1 )
+text = "Angelica Editor ver. 123"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Print2" type="RichTextLabel" parent="Interface"]
-visible = false
-margin_left = 93.0
-margin_top = 255.0
-margin_right = 625.0
-margin_bottom = 310.0
+margin_left = 71.0
+margin_top = 232.0
+margin_right = 529.0
+margin_bottom = 285.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_pivot_offset = Vector2( 10, 10 )
@@ -368,25 +382,6 @@ scroll_following = true
 selection_enabled = true
 custom_effects = [ null, null, null, null, null ]
 __meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="EditorButton" type="LinkButton" parent="Interface"]
-margin_left = 461.416
-margin_top = 267.479
-margin_right = 527.416
-margin_bottom = 293.479
-grow_horizontal = 2
-grow_vertical = 2
-focus_next = NodePath("../../Print")
-focus_previous = NodePath("..")
-focus_mode = 2
-custom_fonts/font = ExtResource( 3 )
-custom_colors/font_color = Color( 0.160784, 0.811765, 0.231373, 1 )
-text = "[editor]"
-underline = 1
-__meta__ = {
 "_edit_use_anchors_": false
 }
 
@@ -395,10 +390,10 @@ anchor_left = -20.0
 anchor_top = 10.0
 anchor_right = -20.0
 anchor_bottom = 10.0
-margin_left = 104.968
-margin_top = 288.416
-margin_right = 424.968
-margin_bottom = 314.416
+margin_left = 110.0
+margin_top = 274.0
+margin_right = 531.0
+margin_bottom = 300.0
 theme = SubResource( 18 )
 custom_styles/focus = SubResource( 19 )
 custom_styles/normal = SubResource( 20 )
@@ -436,20 +431,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LinkBye" type="LinkButton" parent="Interface/LineEdit"]
-margin_left = 440.829
-margin_top = -1.55592
-margin_right = 480.829
-margin_bottom = 28.4441
-grow_horizontal = 2
-grow_vertical = 2
-custom_fonts/font = ExtResource( 10 )
-text = "bye"
-underline = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Linkmini" type="LinkButton" parent="Interface/LineEdit"]
 margin_left = -36.5559
 margin_top = 12.3008
@@ -467,33 +448,17 @@ __meta__ = {
 }
 
 [node name="SendButton" type="LinkButton" parent="Interface/LineEdit"]
-margin_left = 333.238
-margin_top = -3.96851
-margin_right = 354.238
-margin_bottom = 26.0315
+margin_left = 427.586
+margin_top = -3.26139
+margin_right = 492.586
+margin_bottom = 26.7386
 grow_horizontal = 2
 grow_vertical = 2
 focus_next = NodePath("../../Print")
 focus_previous = NodePath("..")
 focus_mode = 2
 custom_fonts/font = ExtResource( 10 )
-text = ">"
-underline = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="LinkHide" type="LinkButton" parent="Interface/LineEdit"]
-margin_left = 388.367
-margin_top = -1.55591
-margin_right = 432.367
-margin_bottom = 28.4441
-grow_horizontal = 2
-grow_vertical = 2
-rect_scale = Vector2( 1.00676, 1 )
-focus_mode = 2
-custom_fonts/font = ExtResource( 10 )
-text = "hide"
+text = "Please"
 underline = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -543,6 +508,22 @@ __meta__ = {
 [node name="Alarm" type="AudioStreamPlayer" parent="Interface/Warning"]
 stream = ExtResource( 7 )
 
+[node name="Menu" type="RichTextLabel" parent="Interface"]
+margin_left = 79.3816
+margin_top = 293.518
+margin_right = 634.382
+margin_bottom = 320.518
+rect_clip_content = false
+custom_fonts/normal_font = ExtResource( 3 )
+bbcode_enabled = true
+meta_underlined = false
+text = "[copy] [save] [edit chat] [update chat] [bye]"
+fit_content_height = true
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Polygon2D2" type="Polygon2D" parent="Interface"]
 color = Color( 1, 1, 1, 0 )
 polygon = PoolVector2Array( 13.5961, 321.43, 12.8782, 273.811, 21.9372, 262.554, 21.5808, 253.869, 25.5347, 250.078, 628.719, 250.549, 632.059, 251.036, 636.514, 252.596, 638.285, 255.506, 638.381, 259.741, 639.451, 307.167, 639.762, 320.957, 623.339, 320.969 )
@@ -574,7 +555,6 @@ grow_horizontal = 2
 grow_vertical = 2
 custom_styles/normal = SubResource( 23 )
 custom_fonts/font = SubResource( 25 )
-text = "00:00:00"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -615,21 +595,16 @@ autostart = true
 [connection signal="timeout" from="AngelicaTimer" to="." method="_on_AngelicaTimer_timeout"]
 [connection signal="timeout" from="AngelicaTimer2" to="." method="_on_AngelicaTimer2_timeout"]
 [connection signal="timeout" from="TimerMini" to="." method="_on_TimerMini_timeout"]
-[connection signal="meta_clicked" from="Interface/Panel/Print" to="." method="_on_Print_meta_clicked"]
-[connection signal="button_up" from="Interface/Editor/SendButton2" to="." method="_on_SendButton2_button_up"]
 [connection signal="button_up" from="Interface/Editor/save" to="." method="_on_save_button_up"]
 [connection signal="button_up" from="Interface/Editor/copy" to="." method="_on_copy_button_up"]
 [connection signal="button_up" from="Interface/Editor/close" to="." method="_on_close_button_up"]
 [connection signal="meta_clicked" from="Interface/Print2" to="." method="_on_Print_meta_clicked"]
-[connection signal="button_up" from="Interface/EditorButton" to="Interface/Editor" method="_on_EditorButton_button_up"]
 [connection signal="gui_input" from="Interface/LineEdit" to="." method="_on_LineEdit_gui_input"]
 [connection signal="text_entered" from="Interface/LineEdit" to="." method="_on_LineEdit_text_entered"]
 [connection signal="text_entered" from="Interface/LineEdit" to="Interface/Panel/Print" method="_on_LineEdit_text_entered"]
-[connection signal="button_up" from="Interface/LineEdit/LinkBye" to="Control" method="_on_LinkButton_button_up"]
 [connection signal="button_up" from="Interface/LineEdit/Linkmini" to="." method="_on_Linkmini_button_up"]
 [connection signal="button_up" from="Interface/LineEdit/SendButton" to="." method="_on_SendButton_button_up"]
 [connection signal="button_up" from="Interface/LineEdit/SendButton" to="Interface/Panel/Print" method="_on_SendButton_button_up"]
-[connection signal="button_up" from="Interface/LineEdit/LinkHide" to="." method="_on_LinkHide_button_up"]
 [connection signal="button_up" from="Interface/Warning/Button" to="." method="_on_Button_button_up"]
 [connection signal="timeout" from="TimeOut" to="." method="_on_TimeOut_timeout"]
 [connection signal="timeout" from="Blink" to="." method="_on_Blink_timeout"]

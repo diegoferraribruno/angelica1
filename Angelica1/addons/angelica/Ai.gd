@@ -1,7 +1,7 @@
 extends Node2D
 
-const ai_version = "122"
-const ai_date = "2021-05-17"
+const ai_version = "123"
+const ai_date = "2021-05-20"
 const about = "My version is"+ ai_version+" from " +ai_date+" please check for updates at [url=http://diegoferraribruno.itch.io/angelica]my web page[/url] \nIf you wanna chat a bit say: [b]hello[/b]"
 const STATES = ["mini","hide","show","editor"]
 var state = "show"
@@ -39,7 +39,7 @@ var autosave = true
 var olduser = ["id","Me","password","#dfbdfbff",notes,links]
 var buser
 var quietstart = false
-var addonmode = true
+onready var addonmode = $Control.addonmode
 var autopause = true
 onready var printparent = "get_parent()"
 var initialize = [[true],["about","notes","list links",]]
@@ -52,7 +52,7 @@ var pong = preload("res://addons/angelica/Pong/pong.tscn")
 func inittialize():
 	for i in user[8][1]:
 		_on_LineEdit_text_entered(i)
-		yield(get_tree().create_timer(1.5), "timeout")
+		yield(get_tree().create_timer(1), "timeout")
 
 func demo():
 	get_node("Interface/LineEdit/LineEditFake").visible = true
@@ -64,13 +64,13 @@ func demo():
 			i = i.replace("ai_name ","")
 			text_to_say(i)
 			screen_shot(true)
-			yield(get_tree().create_timer(1.5), "timeout")
+			yield(get_tree().create_timer(1.2), "timeout")
 		else: 
 			get_node("Interface/LineEdit/LineEditFake").append_bbcode(i)
-			yield(get_tree().create_timer(1.8), "timeout")
+			yield(get_tree().create_timer(2), "timeout")
 			get_node("Interface/LineEdit/LineEditFake").text = ""
 			_on_LineEdit_text_entered(i)
-			yield(get_tree().create_timer(1.5), "timeout")
+			yield(get_tree().create_timer(1.2), "timeout")
 		
 	get_node("Interface/LineEdit/LineEditFake").visible = false
 	user = userbkp
@@ -154,8 +154,7 @@ func _ready():
 	
 #	if autohide == true:
 #		change_state("hide")
-	if OS.get_name() != "HTML5":
-		get_node("Interface/Panel/Print").connect("meta_clicked", self, "_on_RichTextLabel_meta_clicked")
+	
 #func _ready():
 	if $Control.addonmode == true:
 		$"../../PlayerExample".visible = true
@@ -242,13 +241,14 @@ func face_change(image):
 	
 func math(text) -> void:
 	if text.count("+") or text.count("-") or text.count("*") or text.count("/"):
-		text.replace(",",".")
-		var text_to_float = "1.0*"+str(text)
-		var expression = Expression.new()
-		expression.parse(text_to_float)
-		var result = expression.execute()
-		if result != null:
-			text_to_say(str(text," = ",result))
+		if text.count("http") == 0:
+			text.replace(",",".")
+			var text_to_float = "1.0*"+str(text)
+			var expression = Expression.new()
+			expression.parse(text_to_float)
+			var result = expression.execute()
+			if result != null:
+				text_to_say(str(text," = ",result))
 func screen_shot(selfie):
 				if selfie == false:
 					self.visible = false
@@ -261,6 +261,7 @@ func screen_shot(selfie):
 					self.visible = true
 				text_to_say(text)
 
+	
 func _on_LineEdit_text_entered(new_text)-> void :
 	history.push_front(new_text)
 	command_n = 0
@@ -335,13 +336,13 @@ func _on_LineEdit_text_entered(new_text)-> void :
 #							print("sillyword changed")
 				"link":
 					var key = str(command[1])
-					var z = 0
+					var x = 0
 					for i in links[0]:
 						if i == key:
-							OS.shell_open(links[1][z])
-							text_to_say(str("Opening " +str(command[0] +" at "+str(links[1][z]))))
+							OS.shell_open(links[1][x])
+							text_to_say(str("Opening " +str(command[0] +" at "+str(links[1][x]))))
 							$TimerMini.start()
-						z += 1
+						x += 1
 				"tw":
 					var openfile = false
 					var tw_text = new_text.replace("tw ","")
@@ -474,9 +475,16 @@ func _on_LineEdit_text_entered(new_text)-> void :
 	if command.size() > 1:
 		match command[0].to_lower():
 			"edit":
-				if command.size() == 2:
+				if command[1] == "chat":
+					editor(command[1],false)
+					get_node("Interface/Editor")._on_edit_note()
+				if command[1] == "menu":
+					get_node("Interface/Editor/TextEdit").text = get_node("Interface/Menu").bbcode_text
+					editing = ["menu",""]
+					get_node("Interface/Editor")._on_edit_note()
+				if command.size() == 2 and command[1] == "note":
 					text_to_say("Here is a list of your notes:\n"+ str(user[7][0])+"\n Please type: edit note name")
-				else:
+				elif command.size() > 2:
 					editor(command[1], command[2])
 					get_node("Interface/Editor")._on_edit_note()
 #				get_node("Interface/Editor/TextEdit").visible = true
@@ -515,7 +523,12 @@ func _on_LineEdit_text_entered(new_text)-> void :
 						text =""
 					"notes":
 						text_to_say("here is a list of your notes:\n"+str(user[7][0]))
-						
+						var x = 0
+						for i in notes[0]:
+							text += "[url=edit note "+notes[0][x]+"]"+notes[0][x]+"[/url] "
+							x += 1
+						text_to_say(text)
+						text =""
 					"links":
 						var x = 0
 						for i in links[0]:
@@ -586,6 +599,7 @@ func _on_LineEdit_text_entered(new_text)-> void :
 				match command[1]:
 						"init":
 							new_text = new_text.replace("del init ","")
+							new_text = new_text.replace("init","")
 							var init_str = str(new_text)
 							var i = initialize[1].find(init_str)
 							initialize[1].remove(i)
@@ -645,17 +659,29 @@ func _on_LineEdit_text_entered(new_text)-> void :
 								auto_save()
 						"note":
 							new_text = new_text.replace("add note ","")
-							new_text = new_text.replace(command[2],"")
 							user[7][0].append(str(command[2]))
 							user[7][1].append(str(new_text))
+							if command.size() < 4:
+								editor("note",command[2])
+								get_node("Interface/Editor")._on_edit_note()
 							text = "Added note [b]"+ command[2] +":[/b] "+ new_text
 							auto_save()
+							
+				"rename":
+					if command.size() > 3:
+						match command[1]:
+							"note":
+								rename_note(command[1],command[2],command[3])
+							"link":
+								rename_note(command[1],command[2],command[3])
+					else:
+						text_to_say("Please try: rename note old_name new_name")
 	match command[0].to_lower():
 			"links":
 				_on_LineEdit_text_entered("list links")
 				
 			"hide":
-				change_state("hide")
+				_on_LinkHide_button_up()
 			"show":
 				change_state("show")
 			"mini":
@@ -674,6 +700,7 @@ func _on_LineEdit_text_entered(new_text)-> void :
 						yield(get_tree().create_timer(0.5), "timeout")
 			"save":
 				save_prefs()
+				text_to_say("preferences saved")
 				text_to_say(" auto save is set to "+ str(autosave))
 			"about":
 				text_to_say(str("today is ", datetime_to_string(OS.get_date())+" according to this OS."+" "+about))
@@ -692,15 +719,17 @@ func _on_LineEdit_text_entered(new_text)-> void :
 				quietstart = !quietstart
 				user[6][7] = quietstart
 				text_to_say("quietstart set to "+str(quietstart))
-				save_prefs()
+				auto_save()
 			"addon":
 				$Control.addonmode = !$Control.addonmode
 				user[6][6] = $Control.addonmode
 				text_to_say("Addon mode set to "+str($Control.addonmode)+".\n Please save, close and reopen this app!")
+				auto_save()
 			"desktop":
 				$Control.addonmode = false
 				user[6][6] = $Control.addonmode
 				text_to_say("Desktop mode On.\n Please save, and reopen this app!")
+				auto_save()
 			"user":
 				text_to_say(str(user))
 			"notes":
@@ -733,15 +762,14 @@ func _on_LineEdit_text_entered(new_text)-> void :
 	if new_text == " bye ":
 		new_face = load("res://addons/angelica/images/1f64b.png")
 		face_change(new_face)
-		if autosave == true:
-			save_prefs()
-			text_to_say(str("Prefences were save by autosave."))
+		auto_save()
 		text_to_say(str("Bye! If you need me, reload the page or open the app again."))
 		$Timer.start()
 	if new_text == " clear ":
 		get_node("Interface/Print2").set_bbcode("")
 		get_node("Interface/Panel/Print").set_bbcode("")
 		get_node("Interface/Editor/TextEdit").text = ""
+		get_node("Interface/Editor/TextEdit2").text = ""
 	if new_text == " hashtags " or new_text == " # ":
 		var clipboard = ""
 		var hashtags = user[4]["hashtags"]
@@ -874,12 +902,12 @@ func list(what) -> void:
 func text_to_say(text):
 	text = str("[color="+ ai_color+"][b]"+ai_name+":[/b][/color] "+text+"\n")
 	get_node("Interface/Panel/Print").append_bbcode(text)
-#	get_node("Interface/Editor/TextEdit").insert_text_at_cursor(text)
+	get_node("Interface/Editor/TextEdit2").insert_text_at_cursor(text)
 	get_node("Interface/Print2").append_bbcode(text)
 	
 func append_text(text):
 	get_node("Interface/Panel/Print").append_bbcode(text)
-#	get_node("Interface/Editor/TextEdit").insert_text_at_cursor(text)
+	get_node("Interface/Editor/TextEdit2").insert_text_at_cursor(text)
 	get_node("Interface/Print2").append_bbcode(text)
 	
 func _on_Timer_timeout():
@@ -892,6 +920,7 @@ func _on_SendButton_button_up():
 func _on_SendButton2_button_up():
 	var sendtext = get_node("Interface/Editor/TextEdit").text
 	get_node("Interface/Panel/Print").set_bbcode(sendtext)
+	get_node("Interface/Editor/Label").text = "chat updated"
 #
 func add_hashtags():
 	var hashtags = user[4]["hashtags"]
@@ -977,7 +1006,6 @@ func _on_Control_gui_input(InputEventMouseButton):
 			change_state(state_old)
 
 func _on_Control_mouse_entered():
-	pass
 	if addonmode == true and autohide == true:
 		match state:
 			"mini":
@@ -1074,14 +1102,14 @@ func _on_LinkHide_button_up():
 	match state:
 		"hide":
 			change_state("show")
-			get_node("Interface/LineEdit/LinkHide").text = "Hide"
+#			get_node("Interface/LineEdit/LinkHide").text = "Hide"
 		"show":
 			change_state("hide")
-			get_node("Interface/LineEdit/LinkHide").text = "Show"
+#			get_node("Interface/LineEdit/LinkHide").text = "Show"
 
 # crash test area EDITOR
 
-var editing = ["note","firstone"]
+var editing = ["note",""]
 func editor(what,witch):
 	if what == "note":
 		editing[0] = "note"
@@ -1091,16 +1119,33 @@ func editor(what,witch):
 				editing[1] = witch
 				get_node("Interface/Editor/TextEdit").text = notes[1][x]
 				get_node("Interface/Editor/Label").text = str(editing)
-#									note[0].remove(x)
-#				note[1][x] = array_note[3]
 			x += 1
-		
+	if what == "chat":
+		get_node("Interface/Editor/TextEdit").text = get_node("Interface/Editor/TextEdit2").text
+		editing[0]="chat"
+
+func rename_note(what, witch, new_name) -> void:
+	match what:
+		"note":
+			for i in notes[0].size():
+				if notes[0][i] == witch:
+					notes[0][i] = new_name
+					text_to_say(str(what)+" "+str(witch)+" changed to "+str(notes[0][i]))
+					auto_save()
+		"link":
+			for i in links[0].size():
+				if links[0][i] == witch:
+					links[0][i] = new_name
+					text_to_say(str(what)+" "+str(witch)+" changed to "+str(links[0][i]))
+					auto_save()
+
+
 func _on_save_button_up():
 	var save_note_text = get_node("Interface/Editor/TextEdit").text
 	if editing[0] == "note":
 		var x = 0
 		for i in notes[0]:
-			if i == editing[1]:
+			if i == str(editing[1]):
 #				save_note_text.replace("save note ","")
 				notes[1][x] = save_note_text
 				user[7] = notes
@@ -1108,6 +1153,18 @@ func _on_save_button_up():
 				text_to_say(text)
 				auto_save()
 			x += 1
+		if x+1 == notes[1].size()+1 and !editing[1] in notes[0]:
+				editing[0] ="note"
+				editing[1] = str(x)
+				text_to_say(text)
+				user[7][0].append(str(x))
+				user[7][1].append(str(save_note_text))
+				text = str(datetime_to_string(OS.get_time()))+ "Saved note name as [b]"+str(x-1)+"[/b] : " + save_note_text
+				text_to_say(text)
+				auto_save()
+	if editing[0] == "menu":
+		get_node("Interface/Menu").bbcode_text = get_node("Interface/Editor/TextEdit").text
+			
 	get_node("Interface/Editor/Label").text = "Saved: "+str(editing) +" by"+ str(datetime_to_string(OS.get_time())) 
 	
 	
@@ -1153,7 +1210,6 @@ var dialogue = [
 	"del note Angelica121",
 	"help"
 	]
-enum BUS { MASTER }
 
 func volume_change():
 		var bus_idx = AudioServer.get_bus_index("Master")

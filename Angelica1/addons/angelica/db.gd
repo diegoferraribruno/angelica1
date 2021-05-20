@@ -148,7 +148,7 @@ var sentences = {
 		}
 var hashtags = {"hashtags":["#GodotEngine", "#gamedev", "#indiedev", "#indiegame", "#IndieGameDev", "#gaming"]}
 var notes = [["First","Second","Third"],["This is here to tell you that you can [b]add note Title Text[/b]","you can also remove notes, type:[b]del note Second[/b] to erase this one.","Important things must be looked at like: init, ss, tw ss #, gg, RSI and Blink!"]]
-var links = [["twitter","google","angelica","angelica-git","ko-fi"],["http://twitter.com","https://google.com","http://diegoferraribruno.itch.io/angelica","https://github.com/diegoferraribruno/angelica1","https://ko-fi.com/diegoferraribruno"]]
+var links = [["twitter","google","angelica","github","ko-fi","BBcode"],["http://twitter.com","https://google.com","http://diegoferraribruno.itch.io/angelica","https://github.com/diegoferraribruno/angelica1","https://ko-fi.com/diegoferraribruno","https://docs.godotengine.org/pt_BR/latest/tutorials/gui/bbcode_in_richtextlabel.html"]]
 var security = {"privacy":"I will save this information on a file in this computer! so its not safe!: var user = [user_id, user_name, silly_word, user_color, notes, links, ai_name, ai_color",
 	"silly_word":"is not something secure! is just so we do not mistake any identity."
 	}

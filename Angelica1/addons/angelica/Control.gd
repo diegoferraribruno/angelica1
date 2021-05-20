@@ -17,6 +17,7 @@ func _on_Control_gui_input(event):
 		following = false
 
 func _process(_delta):
+	OS.is_window_focused()
 	if following:
 		if lastmouseposition != get_local_mouse_position():
 			
